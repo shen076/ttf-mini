@@ -1,0 +1,108 @@
+# ttf-mini
+
+将 OTF/TTF 字体压缩为 WOFF2 子集，按需保留简/繁体中文、ASCII 和标点符号，大幅缩减字体体积，适合用于网页项目。
+
+## 功能特性
+
+- 自动检测并安装 Python [fonttools](https://github.com/fonttools/fonttools)，零配置开箱即用
+- 两种压缩模式：**完整简/繁体中文**（约 2.1 万字）和 **GB2312 精简**（约 6700 字）
+- 输出 WOFF2 格式（最优网页字体压缩比）
+- 自动生成对应的 `@font-face` CSS 文件
+- 输出文件统一写入 `font/` 目录
+
+## 环境依赖
+
+| 依赖 | 版本要求 |
+|------|---------|
+| Node.js | ≥ 18 |
+| Python | ≥ 3.8（pip3 可用） |
+
+> Python fonttools 和 brotli 会在首次运行时自动安装，也可手动安装：
+> ```bash
+> pip3 install fonttools brotli
+> ```
+
+## 安装
+
+```bash
+npm install
+```
+
+## 用法
+
+```bash
+# 完整简/繁体中文模式（默认）
+npx tsx compress-font.ts <字体文件.otf>
+
+# GB2312 精简模式（简体为主，约 6700 字，体积更小）
+npx tsx compress-font.ts <字体文件.otf> --gb2312
+```
+
+### 示例
+
+```bash
+npx tsx compress-font.ts font/汇文明朝体.OTF
+npx tsx compress-font.ts font/汇文明朝体.OTF --gb2312
+```
+
+输出文件写入 `font/` 目录：
+
+```
+font/
+├── 汇文明朝体.OTF              # 原始字体（不纳入版本控制）
+├── 汇文明朝体-subset.woff2     # 完整模式输出
+├── 汇文明朝体-subset.css
+├── 汇文明朝体-gb2312-subset.woff2  # GB2312 模式输出
+└── 汇文明朝体-gb2312-subset.css
+```
+
+## 引入 CSS
+
+在 HTML `<head>` 中引用生成的 CSS 文件：
+
+```html
+<link rel="stylesheet" href="font/汇文明朝体-subset.css">
+```
+
+或直接通过 `@import`：
+
+```css
+@import url('font/汇文明朝体-subset.css');
+```
+
+## Unicode 覆盖区间
+
+### 完整模式
+
+| 区间 | 说明 |
+|------|------|
+| U+0020–007E | ASCII 可打印字符 |
+| U+00A0–00FF | Latin-1 补充 |
+| U+2000–206F | 通用标点（引号、破折号等） |
+| U+2E80–2EFF | CJK 部首补充 |
+| U+2F00–2FDF | 康熙部首 |
+| U+3000–303F | CJK 符号和标点（全角句号、书名号等） |
+| U+3100–312F | 注音符号（繁体拼音） |
+| U+31A0–31BF | 注音符号扩展 |
+| U+4E00–9FFF | CJK 统一汉字主区（约 20,902 字） |
+| U+F900–FAFF | CJK 兼容汉字 |
+| U+FE10–FE1F | 竖排变体标点 |
+| U+FE30–FE4F | CJK 兼容形式 |
+| U+FE50–FE6F | 小形式变体 |
+| U+FF00–FFEF | 全角/半角形式 |
+
+### GB2312 精简模式
+
+| 区间 | 说明 |
+|------|------|
+| U+0020–007E | ASCII 可打印字符 |
+| U+00A0–00FF | Latin-1 补充 |
+| U+2000–206F | 通用标点 |
+| U+3000–303F | CJK 符号和标点 |
+| U+4E00–9FA5 | GB2312 CJK 范围（约 6700 字） |
+| U+FE30–FE4F | CJK 兼容形式 |
+| U+FF00–FFEF | 全角/半角形式 |
+
+## License
+
+MIT

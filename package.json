@@ -1,0 +1,13 @@
+{
+  "name": "compress-font",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "compress": "tsx compress-font.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.39",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  }
+}
