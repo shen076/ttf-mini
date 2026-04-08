@@ -1,4 +1,4 @@
-# ttf-mini
+# font-minify
 
 将 OTF/TTF 字体压缩为 WOFF2 子集，按需保留简/繁体中文、ASCII 和标点符号，大幅缩减字体体积，适合用于网页项目。
 
